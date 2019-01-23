@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netease.homework.content.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="User">
+        <result column="Id" jdbcType="BIGINT" property="id" />
+        <result column="Username" jdbcType="VARCHAR" property="username" />
+        <result column="Role" jdbcType="TINYINT" property="role" />
+        <result column="Nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="PasswordMd5" jdbcType="VARCHAR" property="passwordMd5" />
+    </resultMap>
+
+    <select id="getByUsername" resultMap="BaseResultMap">
+        SELECT * FROM user WHERE Username = #{username} LIMIT 1
+    </select>
+
+    <select id="listByQuery" resultMap="BaseResultMap">
+        SELECT * FROM Tool_OpenIdUser
+        <where>
+            <if test="email != null and email != ''">
+                Email LIKE #{email}
+            </if>
+            AND Status = 0
+        </where>
+    </select>
+
+
+
+</mapper>
