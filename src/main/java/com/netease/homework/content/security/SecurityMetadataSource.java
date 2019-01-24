@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * @Description
+ * @Description 存储访问控制元数据，以后考虑将3个url列表合在一起
  * @Auther ctl
  * @Date 2019/1/18
  */

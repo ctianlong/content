@@ -58,7 +58,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public SecurityMetadataSource securityMetadataSource() {
         SecurityMetadataSource source = new SecurityMetadataSource();
         // 定义访问规则
-        source.antMatchers("/").anonymous();
+        source.antMatchers("/", "/login", "/api/common/**", "/error/**").anonymous();
         return source;
     }
 

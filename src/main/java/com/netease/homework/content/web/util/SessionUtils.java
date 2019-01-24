@@ -158,4 +158,8 @@ public class SessionUtils {
         return getRequest().getSession(create);
     }
 
+    public static String getContextPath() {
+        return getRequest().getContextPath();
+    }
+
 }

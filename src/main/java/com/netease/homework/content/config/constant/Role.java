@@ -9,15 +9,17 @@ import com.netease.snailreader.common.component.enumeration.IntEnum;
  */
 public enum Role implements IntEnum {
 
-    BUYER(1, "buyer"),
-    SELLER(2, "seller");
+    BUYER(1, "buyer", "买家"),
+    SELLER(2, "seller", "卖家");
 
     private final int intValue;
     private final String displayName;
+    private final String zhName;
 
-    Role(int intValue, String displayName) {
+    Role(int intValue, String displayName, String zhName) {
         this.intValue = intValue;
         this.displayName = displayName;
+        this.zhName = zhName;
     }
 
     @Override
@@ -32,6 +34,10 @@ public enum Role implements IntEnum {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getZhName() {
+        return zhName;
     }
 
     public boolean is(int intValue) {

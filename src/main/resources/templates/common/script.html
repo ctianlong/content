@@ -36,6 +36,7 @@
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 <script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.fileDownload/1.4.2/jquery.fileDownload.min.js"></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -127,23 +128,23 @@
             language:"zh-CN"
         });
         NProgress.configure({
-            minimum: 0.2,
+            minimum: 0.25,
             showSpinner: false
         });
         toastr.options = {
-            // closeButton: false,
-            // debug: false,
-            // progressBar: true,
-            // positionClass: "toast-top-center",
-            // onclick: null,
-            // showDuration: "300",
-            // hideDuration: "1000",
-            timeOut: "3000",
-            // extendedTimeOut: "1000",
-            // showEasing: "swing",
-            // hideEasing: "linear",
-            // showMethod: "fadeIn",
-            // hideMethod: "fadeOut"
+            closeButton: false,
+            debug: false,
+            progressBar: false,
+            positionClass: "toast-bottom-right",
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut"
         };
         var csrf_token_headerName = $("#csrf_token_header").attr("content");
         var csrf_token = $("#csrf_token").attr("content");
@@ -152,6 +153,7 @@
         $.ajaxSetup({
             headers: headers,
             error: function (jqXhr, textStatus, errorThrown) {
+                console.error(textStatus);
                 var code = jqXhr.status||"";
                 if (code === 401) {
                     toastr.warning("您当前未登录");
@@ -172,8 +174,8 @@
 
     function logout() {
         $.ajax({
-            url: ctxPath + "/login/logout",
-            type: "post",
+            url: ctxPath + "/api/common/user/logout",
+            type: "POST",
             beforeSend: function () {
                 NProgress.start();
             },
@@ -181,11 +183,7 @@
                 NProgress.done();
             },
             success: function (data, textStatus, jqXHR) {
-                $(location).prop("href",ctxPath+"/");
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.error(textStatus);
-                $(location).prop("href",ctxPath+"/");
+                $(location).prop("href",ctxPath+"/login");
             }
         });
     }
@@ -201,26 +199,6 @@
         return Y+M+D+h+m+s;
     }
 
-    function syntaxHighlight(json) {
-        if (typeof json !== 'string') {
-            json = JSON.stringify(json, undefined, 2);
-        }
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var cls = 'number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    cls = 'key';
-                } else {
-                    cls = 'string';
-                }
-            } else if (/true|false/.test(match)) {
-                cls = 'boolean';
-            } else if (/null/.test(match)) {
-                cls = 'null';
-            }
-            return '<span class="' + cls + '">' + match + '</span>';
-        });
-    }
+
 
 </script>

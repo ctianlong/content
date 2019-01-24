@@ -130,12 +130,12 @@ public final class AntPathRequestMatcher implements RequestMatcher {
      */
     private static class ExactMatcher implements Matcher {
         private final String exactPath;
-        private final int length;
+        private final String exactPathWithSlash;
         private final boolean caseSensitive;
 
         private ExactMatcher(String exactPath, boolean caseSensitive) {
             this.exactPath = caseSensitive ? exactPath : exactPath.toLowerCase();
-            this.length = exactPath.length();
+            this.exactPathWithSlash = this.exactPath + "/";
             this.caseSensitive = caseSensitive;
         }
 
@@ -144,8 +144,7 @@ public final class AntPathRequestMatcher implements RequestMatcher {
             if (!caseSensitive) {
                 path = path.toLowerCase();
             }
-            return path.equals(exactPath)
-                    || (path.startsWith(exactPath) && path.length() == length + 1 && path.endsWith("/"));
+            return path.equals(exactPath) || path.equals(exactPathWithSlash);
         }
     }
 
