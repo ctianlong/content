@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品详情</title>
+    <div th:replace="common/head"></div>
+</head>
+<body class="hold-transition skin-red layout-top-nav">
+<div class="wrapper">
+    <div th:replace="common/header"></div>
+    <div class="content-wrapper">
+        <div class="container">
+            <section class="content-header">
+                <h1>商品详情
+                    <small>V1.0</small>
+                </h1>
+            </section>
+            <section class="content">
+                <div class="box box-danger" id="c-show">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="img-wrapper">
+                                    <img class="c-img" src="" alt="">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <h4 class="c-name">&nbsp;</h4>
+                                <p class="c-summary">&nbsp;</p>
+                                <div>
+                                    <span class="text-muted c-unit" style="display: none;">¥</span>
+                                    <span class="c-price"></span>
+                                </div>
+                                <div class="c-amount" style="display: none">
+                                    <div class="c-amount-label">购买数量：</div>
+                                    <div class="input-group number-spinner" data-trigger="spinner" id="spinner">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default" data-spin="down"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                        </div>
+                                        <input title="请输入购买数量" data-min="1" data-max="999999" type="text" class="form-control text-center" data-rule="quantity">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default" data-spin="up"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="c-btn" style="display: none;">
+                                    <button type="button" class="btn btn-danger">&nbsp;</button>
+                                    <span class="c-trade-price">当时购买价格：¥<span></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt10">
+                            <div class="col-md-12">
+                                <h4>详细信息</h4>
+                                <hr class="mt0"/>
+                                <p class="c-detail">&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="overlay">-->
+                        <!--<i class="fa fa-refresh fa-spin"></i>-->
+                    <!--</div>-->
+                </div>
+
+            </section>
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/footer"></div>
+</div>
+<div th:replace="common/script"></div>
+<script th:src="@{/js/show.js}"></script>
+
+</body>
+</html>

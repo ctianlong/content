@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netease.homework.content.mapper.ContentMapper">
+
+    <resultMap id="BaseResultMap" type="com.netease.homework.content.entity.Content">
+        <result column="Id" jdbcType="BIGINT" property="id" />
+        <result column="Title" jdbcType="VARCHAR" property="title" />
+        <result column="Price" jdbcType="DOUBLE" property="price" />
+        <result column="ImgUrl" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="ImgType" jdbcType="TINYINT" property="imgType" />
+        <result column="SalesAmount" jdbcType="BIGINT" property="salesAmount" />
+        <result column="Summary" jdbcType="VARCHAR" property="summary" />
+        <result column="DetailText" jdbcType="VARCHAR" property="detailText" />
+        <result column="UserId" jdbcType="BIGINT" property="userId" />
+    </resultMap>
+
+    <delete id="deleteById">
+      DELETE FROM content WHERE Id = #{id}
+    </delete>
+
+    <select id="listForAnonymous" resultMap="BaseResultMap">
+      SELECT Id, Title, Price, ImgUrl, ImgType FROM content
+    </select>
+
+    <select id="listBySellerId" resultMap="BaseResultMap">
+        SELECT Id, Title, Price, ImgUrl, ImgType, SalesAmount FROM content WHERE UserId = #{userId}
+    </select>
+    <select id="getFullinfoById" resultType="com.netease.homework.content.entity.Content">
+        SELECT * FROM content WHERE Id = #{id}
+    </select>
+    <select id="getBaseinfoById" resultType="com.netease.homework.content.entity.Content">
+        SELECT Id, Title, Price, ImgUrl, ImgType, Summary, DetailText FROM content WHERE Id = #{id}
+    </select>
+
+
+</mapper>

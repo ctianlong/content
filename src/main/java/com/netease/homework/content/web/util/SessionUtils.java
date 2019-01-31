@@ -47,6 +47,11 @@ public class SessionUtils {
         return session != null ? (User) session.getAttribute(USER_SESSION_KEY) : null;
     }
 
+    public static Long getCurrentPrincipalId() {
+        User user = getCurrentPrincipal();
+        return user == null ? null : user.getId();
+    }
+
     /**
      * 判断是否登录
      *

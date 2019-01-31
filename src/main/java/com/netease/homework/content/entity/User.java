@@ -69,4 +69,8 @@ public class User implements Serializable {
                 ", passwordMd5='" + passwordMd5 + '\'' +
                 '}';
     }
+
+    public int getRoleCode() {
+        return role != null ? role.getIntValue() : -1;
+    }
 }

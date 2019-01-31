@@ -17,20 +17,20 @@ import java.util.Map;
 /**
  * @Description
  * @Auther ctl
- * @Date 2019/1/23
+ * @Date 2019/1/28
  */
 @RestController
-@RequestMapping("/api/common")
-public class CommonController {
+@RequestMapping("/api/user")
+public class UserController {
 
     private final UserMapper userMapper;
 
     @Autowired
-    public CommonController(UserMapper userMapper) {
+    public UserController(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/common/login")
     public JsonResponse login(String username, String passwordMd5) {
         JsonResponse response = new JsonResponse();
         if (SessionUtils.isAuthenticated()) {
@@ -54,11 +54,9 @@ public class CommonController {
         return response.setSuccessful().setData(data);
     }
 
-    @PostMapping("/user/logout")
+    @PostMapping("/common/logout")
     public JsonResponse logout() {
         SessionUtils.logout();
         return JsonResponse.instance();
     }
-
-
 }

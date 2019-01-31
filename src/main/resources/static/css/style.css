@@ -1,0 +1,126 @@
+/* 登录页背景修改 */
+.login-page {
+    background: url("http://static.tongjilab.cn/image/simple-bg2.png") repeat fixed;
+}
+.login-box-body {
+    background: initial;
+}
+.content-wrapper {
+    background: url("http://static.tongjilab.cn/image/simple-bg2.png") repeat fixed;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #dd4b39;
+}
+/* 首页商品列表图片长宽相等且响应式 */
+.img-wrapper {
+    position: relative;
+    padding-bottom: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+.img-wrapper img {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
+/* 超出部分显示省略号 */
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
+a:link, a:visited {
+    color: #3d3d3d;
+    text-decoration: none;
+}
+a:hover, a:focus, a:active {
+    text-decoration: underline;
+    color: #f40;
+}
+.img-box {
+    padding: 0;
+    border-top: 1px solid #f4f4f4;
+}
+.content-desc {
+    background: #f7f7f7;
+}
+.c-price {
+    color: #dd4b39;
+    font-weight: bold;
+    font-size: 21px
+}
+.f14 {
+    font-size: 14px;
+}
+.f20 {
+    font-size: 20px;
+}
+.delete-icon {
+    color: #dd4b39;
+    display: none;
+    margin-right: 5px;
+    cursor: pointer;
+    float: right;
+}
+.box-widget:hover .delete-icon {
+    display: inline-block;
+}
+.modal-content {
+    border-radius: 6px;
+}
+.number-spinner {
+    width: 150px;
+}
+/* 防止表头换行 */
+th,td {
+    white-space: nowrap;
+    text-align: center;
+}
+/* 修改nprogress进度条颜色 */
+#nprogress .bar {
+    background: rgb(255, 255, 255);
+    position: fixed;
+    z-index: 1031;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px
+}
+/* 强制不换行 */
+.nowrap{white-space:nowrap;}
+/* 允许单词内断句，首先会尝试挪到下一行，看看下一行的宽度够不够，不够的话就进行单词内的断句 */
+.breakword{word-wrap: break-word;}
+/* 断句时，不会把长单词挪到下一行，而是直接进行单词内的断句 */
+.breakAll{word-break:break-all;}
+.mb5 {
+    margin-bottom: 5px;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+.mt0 {
+    margin-top: 0;
+}
+.mt10 {
+    margin-top: 10px;
+}
+.mt5 {
+    margin-top: 5px;
+}
+.c-summary {
+    color: #777;
+}
+.c-trade-price {
+    line-height: 35px;
+    color: #777;
+    margin-left: 10px;
+}
+.c-btn {
+    margin-top: 10px;
+}
+.c-amount {
+    margin-top: 5px;
+}
