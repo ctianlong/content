@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品编辑</title>
+    <!--通用css-->
+    <div th:replace="common/head"></div>
+    <!--页面特定所需css-->
+    <!-- 文件上传 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/filepond@4.0.0/dist/filepond.min.css">
+</head>
+<body class="hold-transition skin-red layout-top-nav">
+<div class="wrapper">
+    <div th:replace="common/header"></div>
+    <div class="content-wrapper">
+        <div class="container">
+            <section class="content-header">
+                <h1><span id="page-title"></span>
+                    <small>V1.0</small>
+                </h1>
+            </section>
+            <section class="content">
+                <div class="box box-danger">
+                    <div class="box-body">
+                        <form id="content-page" role="form" style="display: none;">
+                            <div class="row">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <input type="hidden" id="id" />
+                                            <div class="form-group">
+                                                <label for="title">标题</label>
+                                                <input type="text" class="form-control" id="title" placeholder="2-80字符">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="summary">摘要</label>
+                                                <input type="text" class="form-control" id="summary" placeholder="2-140字符">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="imgUrl-text" class="mr10">图片</label>
+                                                <label class="mr5">
+                                                    <input type="radio" name="imgType" id="imgType-text" checked>
+                                                    <span style="font-weight: normal;">图片地址</span>
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="imgType" id="imgType-upload" >
+                                                    <span style="font-weight: normal;">本地上传</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="imgUrl-text" placeholder="请输入图片地址">
+                                                <div id="imgUpload-wrapper" style="display: none">
+                                                    <input type="file" name="imgUpload" id="imgUpload" >
+                                                </div>
+                                                <input type="hidden" id="imgUrl-upload">
+                                                <!--<p class="help-block">Example block-level help text here.</p>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-background">
+                                                <div class="img-wrapper">
+                                                    <img id="img-pre" src="" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="detailText">正文</label>
+                                        <textarea class="form-control" rows="5" id="detailText" placeholder="2-1000字符"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price">价格</label>
+                                        <div class="input-group" style="width: 160px;">
+                                            <input type="text" class="form-control" id="price">
+                                            <span class="input-group-addon">￥</span>
+                                        </div>
+                                    </div>
+                                    <button id="save" type="button" class="btn btn-danger">保存</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="success-page" class="row" style="display: none;">
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <div class="mt10 mb10">
+                                    <h4 class="text-center" id="success-title"></h4>
+                                    <hr/>
+                                    <a th:href="@{/}" class="btn btn-default">返回首页</a>
+                                    <a id="show-url" class="btn btn-danger pull-right">查看内容</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/footer"></div>
+</div>
+<!--通用js-->
+<div th:replace="common/script"></div>
+<!--页面特定所需js-->
+<!-- 文件上传 -->
+<script src="https://cdn.jsdelivr.net/npm/filepond@4.0.0/dist/filepond.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filepond-polyfill@1.0.2/dist/filepond-polyfill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-file-validate-size@2.1.0/dist/filepond-plugin-file-validate-size.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-file-validate-type@1.2.1/dist/filepond-plugin-file-validate-type.min.js"></script>
+<!-- 用户脚本 -->
+<script th:src="@{/js/detail.js}"></script>
+</body>
+</html>

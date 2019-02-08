@@ -1,3 +1,6 @@
+var csrf_token_headerName = $("#csrf_token_header").attr("content");
+var csrf_token = $("#csrf_token").attr("content");
+
 // bootstrap table 默认配置
 $.extend($.fn.bootstrapTable.defaults, {
     showColumns: true, //是否显示所有的列
@@ -79,10 +82,10 @@ $(function () {
         minimumResultsForSearch:-1,
         language:"zh-CN"
     });
-    $('input').iCheck({
-        checkboxClass: 'icheckbox_square-blue',
-        radioClass: 'iradio_square-blue',
-        increaseArea: '20%' // optional
+    $('input[type="checkbox"], input[type="radio"]').iCheck({
+        checkboxClass: 'icheckbox_flat-red',
+        radioClass: 'iradio_flat-red',
+        // increaseArea: '20%' // optional
     });
     NProgress.configure({
         minimum: 0.25,
@@ -103,8 +106,6 @@ $(function () {
         showMethod: "fadeIn",
         hideMethod: "fadeOut"
     };
-    var csrf_token_headerName = $("#csrf_token_header").attr("content");
-    var csrf_token = $("#csrf_token").attr("content");
     var headers = {};
     headers[csrf_token_headerName] = csrf_token;
     $.ajaxSetup({
@@ -117,16 +118,12 @@ $(function () {
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.error(textStatus);
-            var code = jqXhr.status||"";
-            if (code === 401) {
-                toastr.warning("您当前未登录");
-            } else if (code === 403) {
-                toastr.warning("您的访问权限不足");
-            } else {
-                showError();
-            }
+            var status = jqXhr.status||"";
+            showErrorByStatus(status);
         }
     });
+
+    template.defaults.imports.formatTime = formatTime;
 
 });
 
@@ -173,16 +170,96 @@ function getUrlParams(name, url) {
     return params;
 }
 
+function resolveUrlHash(hash) {
+    if (hash === undefined) {
+        hash = window.location.hash;
+        if (hash) {
+            sessionStorage.setItem('lastHash', hash);
+        } else {
+            hash = sessionStorage.getItem('lastHash');
+        }
+    }
+    if (!hash) return null;
+    hash = hash.replace(/^[#!]+/, '');
+    var path;
+    var params = {};
+    var question = hash.indexOf('?');
+    if (question === -1) {
+        path = hash;
+    } else {
+        path = hash.substring(0, question);
+        var search = hash.substring(question, hash.length);
+        var regex = /[?&]+([^=?&#]+)(=([^&#]*))?/g;
+        var match;
+        while(match = regex.exec(search)) {
+            var key = decodeURIComponent(match[1].replace('/\+/g', ' '));
+            var val = match[3] !== undefined ? decodeURIComponent(match[3].replace('/\+/g', ' ')) : '';
+            if (params.hasOwnProperty(key)) {
+                var oldVal = params[key];
+                if (Array.isArray(oldVal))
+                    oldVal.push(val);
+                else
+                    params[key] = [oldVal, val];
+            } else {
+                params[key] = val;
+            }
+        }
+    }
+    return {
+        path: path,
+        params: params
+    };
+}
+
 function resolve(fn) {
     return function (data) {
         if (data.successful) {
-            fn(data.data);
+            if(fn) fn(data.data);
         } else {
-            toastr.error(data.error);
+            showError(data.error);
         }
     };
 }
 
-function showError() {
-    toastr.error("请求出错，请稍后再试");
+function showSuccess(msg) {
+    toastr.success(msg || '操作成功');
+}
+
+function showInfo(msg) {
+    toastr.info(msg || '系统提示');
+}
+
+function showWarning(msg) {
+    toastr.warning(msg || '系统警告');
+}
+
+function showError(msg) {
+    toastr.error(msg || '系统错误');
+}
+
+function showErrorByStatus(status) {
+    if (status === 401) {
+        showWarning("您当前未登录");
+    } else if (status === 403) {
+        showWarning("您的访问权限不足");
+    } else {
+        showError("请求出错，请稍后再试");
+    }
+}
+
+function showConfirm(msg, fn) {
+    BootstrapDialog.confirm({
+        title: '提示',
+        message: msg,
+        btnCancelLabel: '取消',
+        btnOKLabel: '确认',
+        type: BootstrapDialog.TYPE_DANGER,
+        size: BootstrapDialog.SIZE_SMALL,
+        closable: true,
+        callback: fn
+    });
+}
+
+function getRenderById(id) {
+    return template.compile(document.getElementById(id).innerHTML);
 }

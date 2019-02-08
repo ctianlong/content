@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netease.homework.content.mapper.ShopcartMapper">
+
+    <resultMap id="BaseResultMap" type="com.netease.homework.content.entity.Shopcart">
+        <result column="Id" jdbcType="BIGINT" property="id" />
+        <result column="ContentId" jdbcType="BIGINT" property="contentId" />
+        <result column="Amount" jdbcType="BIGINT" property="amount" />
+        <result column="UserId" jdbcType="BIGINT" property="userId" />
+        <result column="CreateTime" jdbcType="BIGINT" property="createTime" />
+        <result column="UpdateTime" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+    <insert id="addOrUpdate">
+        INSERT INTO shopcart(ContentId,Amount,UserId,CreateTime, UpdateTime)
+        VALUES (#{contentId},#{amount},#{userId},#{createTime},#{updateTime})
+        ON DUPLICATE KEY UPDATE Amount = Amount + #{amount},UpdateTime = #{updateTime}
+    </insert>
+
+
+</mapper>

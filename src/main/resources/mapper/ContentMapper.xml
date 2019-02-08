@@ -14,6 +14,21 @@
         <result column="UserId" jdbcType="BIGINT" property="userId" />
     </resultMap>
 
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO content(Title,Price,ImgUrl,ImgType,Summary,DetailText,UserId)
+        VALUES (#{title},#{price},#{imgUrl},#{imgType},#{summary},#{detailText},#{userId})
+    </insert>
+    <update id="update">
+        UPDATE content
+        SET Title = #{title},
+            Price = #{price},
+            ImgType = #{imgType},
+            ImgUrl = #{imgUrl},
+            Summary = #{summary},
+            DetailText = #{detailText}
+        WHERE Id = #{id}
+    </update>
+
     <delete id="deleteById">
       DELETE FROM content WHERE Id = #{id}
     </delete>
@@ -25,12 +40,28 @@
     <select id="listBySellerId" resultMap="BaseResultMap">
         SELECT Id, Title, Price, ImgUrl, ImgType, SalesAmount FROM content WHERE UserId = #{userId}
     </select>
+
     <select id="getFullinfoById" resultType="com.netease.homework.content.entity.Content">
         SELECT * FROM content WHERE Id = #{id}
     </select>
+
     <select id="getBaseinfoById" resultType="com.netease.homework.content.entity.Content">
         SELECT Id, Title, Price, ImgUrl, ImgType, Summary, DetailText FROM content WHERE Id = #{id}
     </select>
 
+    <select id="countById" resultType="java.lang.Integer">
+        SELECT count(*) FROM content WHERE Id = #{id}
+    </select>
+    <select id="listByContentIds" resultType="com.netease.homework.content.entity.Content">
+        <![CDATA[
+			SELECT * FROM content
+			WHERE Id IN
+		]]>
+        <foreach collection="ids" open=" (" close=") " item="id" separator=",">
+            <![CDATA[
+				#{id}
+			]]>
+        </foreach>
+    </select>
 
 </mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账务</title>
+    <div th:replace="common/head"></div>
+</head>
+<body class="hold-transition skin-red layout-top-nav">
+<div class="wrapper">
+    <div th:replace="common/header"></div>
+    <div class="content-wrapper">
+        <div class="container">
+            <section class="content-header">
+                <h1>已购买的内容
+                    <small>V1.0</small>
+                </h1>
+            </section>
+            <section class="content">
+                <div class="box box-danger">
+
+                    <div id="item-list" class="box-body table-responsive no-padding">
+
+                    </div>
+
+                </div>
+
+            </section>
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/footer"></div>
+</div>
+<div th:replace="common/script"></div>
+<script id="tpl-account" type="text/html">
+    <table class="table table-hover table-striped">
+        <tbody>
+        <tr>
+            <th>内容图片</th>
+            <th>内容名称</th>
+            <th>购买时间</th>
+            <th>购买数量</th>
+            <th>购买价格</th>
+        </tr>
+        {{set total = 0}}
+        {{if list && list.length > 0}}
+        {{each list item}}
+        <% total = total + item.tradePrice %>
+        <tr>
+            <td>
+                <a href="{{$imports.ctxPath + '/show?id=' + item.contentId}}">
+
+                    <div class="img-background">
+
+                    <div class="img-wrapper">
+                        <img src="{{item.imgType === 2 ? $imports.ctxPath + item.imgUrl : item.imgUrl}}" alt="{{item.title}}">
+                    </div>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <a href="{{$imports.ctxPath + '/show?id=' + item.contentId}}">
+                    {{item.title}}
+                </a>
+            </td>
+            <td>{{item.tradeTime | formatTime}}</td>
+            <td>{{item.tradeAmount}}</td>
+            <td>
+                <span class="text-muted">¥</span>
+                <span>{{item.tradePrice}}</span>
+            </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+            <td colspan="5" class="text-center">购买内容为空</td>
+        </tr>
+        {{/if}}
+        </tbody>
+        {{if list && list.length > 0}}
+        <tfoot>
+        <tr>
+            <td colspan="4" class="total">
+                总计：
+            </td>
+            <td>
+                <span class="text-muted">¥</span>
+                <span>{{total}}</span>
+            </td>
+        </tr>
+        </tfoot>
+        {{/if}}
+    </table>
+</script>
+<script th:src="@{/js/account.js}"></script>
+
+</body>
+</html>

@@ -14,11 +14,11 @@
                     <li><a th:href="@{/}">首页</a></li>
                     <div th:if="${#authentication != null}" th:remove="tag">
                         <div isec:authorize-role="buyer" th:remove="tag">
-                            <li><a href="#">账务</a></li>
+                            <li><a th:href="@{/account}">账务</a></li>
                             <li><a href="#">购物车</a></li>
                         </div>
                         <div isec:authorize-role="seller" th:remove="tag">
-                            <li><a href="#">发布</a></li>
+                            <li><a th:href="@{/detail#!/public}">发布</a></li>
                         </div>
                     </div>
                 </ul>

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalExceptionHandler {
 
     /**
-     * 文件上传大小超出限制异常
+     * 文件上传异常
      * @param req
      * @param e
      * @param redirectAttributes
@@ -28,6 +28,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     @ResponseBody
     public JsonResponse handleError(HttpServletRequest req, MultipartException e, RedirectAttributes redirectAttributes) {
-        return new JsonResponse().setCode(ResultCode.ERROR_BAD_PARAMETER).setError("文件大小不符合要求");
+        return new JsonResponse().setCode(ResultCode.ERROR_UNKNOWN).setError("文件上传失败");
     }
 }

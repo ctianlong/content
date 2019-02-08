@@ -16,10 +16,6 @@ $(function () {
         deleteContent($this.data('id'), $this.data('title'));
     });
 
-    function getRenderById(id) {
-        return template.compile(document.getElementById(id).innerHTML);
-    }
-
     function contentForAnonymous() {
         $.when($.getJSON(ctxPath + "/api/content/common/list"),
             getRenderById("tpl-content"))
@@ -106,10 +102,10 @@ $(function () {
                     $.ajax({url: ctxPath + '/api/content/seller/delete/' + id, type: 'DELETE'})
                         .done(function (data) {
                             if (data.successful) {
-                                toastr.success("删除成功");
+                                showSuccess("删除成功");
                                 $("#item-"+id).remove();
                             } else {
-                                toastr.error(data.error);
+                                showError(data.error);
                             }
                         });
                 }

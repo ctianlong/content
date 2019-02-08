@@ -14,6 +14,12 @@
     <select id="getContentIdsByUserId" resultType="java.lang.Long">
         SELECT ContentId FROM `order` WHERE UserId = #{userId}
     </select>
+    <select id="getByUserIdAndContentId" resultType="com.netease.homework.content.entity.Order">
+        SELECT * FROM `order` WHERE Id = #{id} AND UserId = #{userId}
+    </select>
+    <select id="listByUserId" resultType="com.netease.homework.content.entity.Order">
+        SELECT * FROM `order` WHERE UserId = #{userId}
+    </select>
 
 
 </mapper>

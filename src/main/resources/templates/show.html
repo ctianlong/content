@@ -30,21 +30,25 @@
                                     <span class="text-muted c-unit" style="display: none;">¥</span>
                                     <span class="c-price"></span>
                                 </div>
-                                <div class="c-amount" style="display: none">
-                                    <div class="c-amount-label">购买数量：</div>
-                                    <div class="input-group number-spinner" data-trigger="spinner" id="spinner">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default" data-spin="down"><i class="fa fa-minus" aria-hidden="true"></i></button>
-                                        </div>
-                                        <input title="请输入购买数量" data-min="1" data-max="999999" type="text" class="form-control text-center" data-rule="quantity">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default" data-spin="up"><i class="fa fa-plus" aria-hidden="true"></i></button>
+
+                                <form class="form-inline c-amount" style="display: none">
+                                    <div class="form-group">
+                                        <label class="control-label c-amount-label" for="number">购买数量：</label>
+                                        <div class="input-group number-spinner" data-trigger="spinner" id="spinner">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-spin="down"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                            </div>
+                                            <input id="number" title="请输入购买数量" data-min="1" data-max="999999" type="text" class="form-control text-center" data-rule="quantity">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-spin="up"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
+
                                 <div class="c-btn" style="display: none;">
                                     <button type="button" class="btn btn-danger">&nbsp;</button>
-                                    <span class="c-trade-price">当时购买价格：¥<span></span></span>
+                                    <span class="c-trade-price">当时购买价格：¥&nbsp;<span></span></span>
                                 </div>
                             </div>
                         </div>

@@ -50,6 +50,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/show").setViewName("show");
+        registry.addViewController("/detail").setViewName("detail");
+        registry.addViewController("/account").setViewName("account");
     }
 
     /**
@@ -61,8 +63,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // 定义访问规则
         source.antMatchers("/", "/login", "/error/**", "/show").anonymous()
                 .antMatchers("/api/user/common/**", "/api/content/common/**").anonymous()
-                .antMatchers("/api/order/**").hasRole(Role.BUYER)
-                .antMatchers("/api/content/seller/**").hasRole(Role.SELLER);
+                .antMatchers("/api/order/**", "/api/shopcart/**", "/account").hasRole(Role.BUYER)
+                .antMatchers("/api/content/seller/**", "/detail").hasRole(Role.SELLER);
         return source;
     }
 
