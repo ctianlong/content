@@ -119,9 +119,9 @@ $(function () {
                 $id.val(c.id);
                 $title.val(c.title);
                 $summary.val(c.summary);
-                bugFixFlag = true; // todo 暂时修复
                 var file = $filePond.getFile();
                 if (file) {
+                    bugFixFlag = true; // todo 暂时修复
                     $filePond.removeFile();
                 }
                 var imgUrl = c.imgUrl;
@@ -136,8 +136,13 @@ $(function () {
                     $imgUrlUpload.val(imgUrl);
                     $imgPre.prop('src', ctxPath + imgUrl);
                     // $filePond.addFile(ctxPath + imgUrl);
-                    var name = imgUrl.substring(imgUrl.lastIndexOf('/') + 1, imgUrl.length); // todo 文件上传相关
+                    var index = imgUrl.lastIndexOf('/') + 1;
+                    var urlPrefix = ctxPath + imgUrl.substring(0, index);
+                    var name = imgUrl.substring(index, imgUrl.length); // todo 文件上传相关
                     $filePond.setOptions({
+                        server: {
+                            load: urlPrefix
+                        },
                         files: [
                             {
                                 source: name,
@@ -190,7 +195,7 @@ $(function () {
             imgType = 1;
             imgUrl = $imgUrlText.val().trim();
             if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g.test(imgUrl)) {
-                if (!imgUrl.startsWith('/images/upload/')) { // todo 对于文件上传返回的url格式进行临时处理
+                if (!imgUrl.startsWith('/img/')) { // todo 对于文件上传返回的url格式进行临时处理
                     showWarning("图片地址信息不符合要求");
                     return;
                 }
@@ -301,7 +306,7 @@ $(function () {
                 fetch: null,
                 revert: null,
                 restore: null,
-                load: ctxPath + '/images/upload/' // todo 文件上传相关
+                load: ctxPath + '/img/' // todo 文件上传相关
             },
             acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif'],
             fileValidateTypeLabelExpectedTypesMap: {

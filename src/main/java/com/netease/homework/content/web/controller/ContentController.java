@@ -7,17 +7,17 @@ import com.netease.homework.content.web.util.JsonResponse;
 import com.netease.homework.content.web.util.ResultCode;
 import com.netease.homework.content.web.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 /**
  * @Description
@@ -29,6 +29,11 @@ import java.util.Objects;
 public class ContentController {
 
     private final ContentMapper contentMapper;
+
+    @Value("${web.img-upload-path}")
+    private String imgUploadPath;
+    @Value("${web.img-url-prefix}")
+    private String imgUrlPrefix;
 
     @Autowired
     public ContentController(ContentMapper contentMapper) {
@@ -125,19 +130,56 @@ public class ContentController {
     }
 
     @PostMapping("/seller/image/upload")
-    public JsonResponse imgUploadBySeller(@RequestParam(name = "imgUpload") MultipartFile imgUpload) {
-
+    public JsonResponse imgUploadBySeller(@RequestParam(name = "imgUpload") MultipartFile imgUpload) throws IOException {
         JsonResponse r = new JsonResponse();
-        System.out.println(imgUpload.getName());
-        System.out.println(imgUpload.getContentType());
-        System.out.println(imgUpload.getOriginalFilename());
-        System.out.println(imgUpload.getSize());
-
-//        return r.setCode(ResultCode.ERROR_BAD_PARAMETER).setError("文件类型无效");
+        if (imgUpload.isEmpty()) {
+            return r.setCode(ResultCode.ERROR_BAD_PARAMETER).setError("请求错误");
+        }
+        String fileName = imgUpload.getOriginalFilename();
+        String contentType = imgUpload.getContentType();
+        Set<String> allowContentTypes = new HashSet<>(Arrays.asList("image/jpeg", "image/png", "image/gif"));
+        Set<String> allowExtNames = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "gif"));
+        if (fileName.lastIndexOf(".") == -1
+                || !allowExtNames.contains(fileName.substring(fileName.lastIndexOf(".") + 1))
+                || !allowContentTypes.contains(contentType)) {
+            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("上传文件类型不符合要求");
+        }
+        String extName = fileName.substring(fileName.lastIndexOf("."));
+        String md5;
+        try (InputStream in = imgUpload.getInputStream()) {
+            md5 = DigestUtils.md5DigestAsHex(in);
+        }
+        String md5FileName = md5 + extName;
+        Path extraPath = createExtraPath(md5FileName);
+        Path storeDir = Paths.get(imgUploadPath).resolve(extraPath);
+        if (Files.notExists(storeDir)) {
+            Files.createDirectories(storeDir);
+        }
+        try (InputStream in = imgUpload.getInputStream()) {
+            Files.copy(in, storeDir.resolve(md5FileName), StandardCopyOption.REPLACE_EXISTING);
+        }
         Map<String, Object> data = new HashMap<>();
-        data.put("imgUrl", "/images/upload/18bOOOPIC9c.jpg");
-        data.put("uniqueId", "123456");
+        String imgRelativeUrl = Paths.get(imgUrlPrefix).resolve(extraPath).resolve(md5FileName).toString().replaceAll("\\\\", "/");
+        data.put("imgUrl", imgRelativeUrl);
+        data.put("uniqueId", md5);
         return r.setSuccessful().setData(data);
+    }
+
+    /**
+     * 为防止一个目录下面出现太多文件，使用hash算法打散存储，创建文件存储前置额外目录
+     *
+     * @param fileName  文件名，要根据文件名生成额外存储目录
+     * @return 额外存储目录
+     */
+    private Path createExtraPath(String fileName) {
+        int hashcode = fileName.hashCode();
+        int dir1 = hashcode & 0xf; //0--15
+        int dir2 = (hashcode & 0xf0) >> 4; //0-15
+        return Paths.get(String.valueOf(dir1), String.valueOf(dir2));
+    }
+
+    public static void main(String[] args) throws IOException {
+//        Files.copy(Paths.get("./img/8625d9f3-c059-4dc6-b915-37bb5ea7e6a3.jpg"), Paths.get("./img/a/abc.jpg"));
     }
 
 }

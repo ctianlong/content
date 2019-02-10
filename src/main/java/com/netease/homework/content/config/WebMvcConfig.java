@@ -15,12 +15,15 @@ import com.netease.snailreader.common.ext.jackson.IntEnumSerializer;
 import com.netease.snailreader.common.ext.jackson.ObjectMapperFactory;
 import com.netease.snailreader.common.ext.jackson.StringEnumSerializer;
 import com.netease.snailreader.common.ext.spring.convert.CustomStringToEnumConverterFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -35,6 +38,11 @@ import java.util.Map;
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
+
+    @Value("${web.img-upload-path}")
+    private String imgUploadPath;
+    @Value("${web.img-url-prefix}")
+    private String imgUrlPrefix;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -52,6 +60,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/show").setViewName("show");
         registry.addViewController("/detail").setViewName("detail");
         registry.addViewController("/account").setViewName("account");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 文件上传路径设置
+        registry.addResourceHandler(imgUrlPrefix + "**").addResourceLocations("file:" + imgUploadPath);
     }
 
     /**
