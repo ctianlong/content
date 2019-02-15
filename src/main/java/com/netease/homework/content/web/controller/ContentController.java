@@ -90,7 +90,7 @@ public class ContentController {
         if (c.getSalesAmount() > 0) {
             return response.setCode(ResultCode.ERROR_UNKNOWN).setError("商品已卖出，无法删除");
         }
-        if (contentMapper.deleteById(id) != 1) {
+        if (contentMapper.deleteByIdLogic(id) != 1) {
             return response.setCode(ResultCode.ERROR_UNKNOWN).setError("删除失败");
         }
         return response.setSuccessful();
@@ -102,6 +102,7 @@ public class ContentController {
         Long uid = SessionUtils.getCurrentPrincipalId();
         Assert.notNull(uid, "add content, userId must not be null");
         c.setUserId(uid);
+        // todo 价格两位小数处理
         int i = contentMapper.save(c);
         if (i != 1) {
             return r.setCode(ResultCode.ERROR_UNKNOWN).setError("添加失败");
@@ -122,6 +123,7 @@ public class ContentController {
             SessionUtils.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
+        // todo 价格两位小数处理
         int i = contentMapper.update(c);
         if (i != 1) {
             return r.setCode(ResultCode.ERROR_UNKNOWN).setError("更新失败");

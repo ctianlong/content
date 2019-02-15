@@ -22,6 +22,7 @@ public class Content implements Serializable {
     private String summary;
     private String detailText;
     private long userId;
+    private int status;
 
     public long getId() {
         return id;
@@ -93,5 +94,13 @@ public class Content implements Serializable {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

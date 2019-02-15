@@ -32,11 +32,11 @@
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 }
-.content-card-title>a:link, .content-card-title>a:visited {
+.emphasize-href>a:link, .emphasize-href>a:visited {
     color: #3d3d3d;
     text-decoration: none;
 }
-.content-card-title>a:hover, .content-card-title>a:focus, .content-card-title>a:active {
+.emphasize-href>a:hover, .emphasize-href>a:focus, .emphasize-href>a:active {
     text-decoration: underline;
     color: #f40;
 }
@@ -57,6 +57,9 @@
 }
 .f20 {
     font-size: 20px;
+}
+.f12 {
+    font-size: 12px;
 }
 .delete-icon {
     color: #dd4b39;

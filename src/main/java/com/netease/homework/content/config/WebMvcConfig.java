@@ -60,6 +60,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/show").setViewName("show");
         registry.addViewController("/detail").setViewName("detail");
         registry.addViewController("/account").setViewName("account");
+        registry.addViewController("/shopcart").setViewName("shopcart");
     }
 
     @Override

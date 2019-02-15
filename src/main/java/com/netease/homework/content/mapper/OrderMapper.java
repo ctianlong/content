@@ -16,5 +16,5 @@ public interface OrderMapper {
 
     Order getByUserIdAndContentId(@Param("userId") Long userId, @Param("id") Long id);
 
-    List<Order> listByUserId(@Param("userId") Long uid);
+    List<Order> listByUserId(@Param("userId") Long userId);
 }

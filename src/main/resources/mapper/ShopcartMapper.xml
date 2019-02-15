@@ -15,6 +15,9 @@
         VALUES (#{contentId},#{amount},#{userId},#{createTime},#{updateTime})
         ON DUPLICATE KEY UPDATE Amount = Amount + #{amount},UpdateTime = #{updateTime}
     </insert>
+    <select id="listItemByUserId" resultType="com.netease.homework.content.entity.Shopcart">
+        SELECT * FROM shopcart WHERE UserId = #{userId}
+    </select>
 
 
 </mapper>

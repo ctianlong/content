@@ -25,6 +25,8 @@ public interface ContentMapper extends InterceptableComponent {
 
     int deleteById(@Param("id") Long id);
 
+    int deleteByIdLogic(@Param("id") Long id);
+
     Content getBaseinfoById(@Param("id") Long id);
 
     Content getFullinfoById(@Param("id") Long id);

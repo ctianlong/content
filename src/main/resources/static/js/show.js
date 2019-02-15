@@ -112,7 +112,7 @@ $(function () {
             closable: true,
             callback: function (r) {
                 if (r) {
-                    $.post(ctxPath + "/api/shopcart/loginuser/add", {
+                    $.post(ctxPath + "/api/shopcart/item/add", {
                         id: content.id,
                         amount: content.tradeAmount
                     }).done(resolve(function () {

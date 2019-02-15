@@ -12,6 +12,7 @@
         <result column="Summary" jdbcType="VARCHAR" property="summary" />
         <result column="DetailText" jdbcType="VARCHAR" property="detailText" />
         <result column="UserId" jdbcType="BIGINT" property="userId" />
+        <result column="Status" jdbcType="TINYINT" property="status" />
     </resultMap>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
@@ -26,31 +27,39 @@
             ImgUrl = #{imgUrl},
             Summary = #{summary},
             DetailText = #{detailText}
-        WHERE Id = #{id}
+        WHERE Id = #{id} AND Status = 0
     </update>
 
+    <!-- 物理删除 -->
     <delete id="deleteById">
       DELETE FROM content WHERE Id = #{id}
     </delete>
 
+    <!-- 逻辑删除 -->
+    <update id="deleteByIdLogic">
+        UPDATE content
+        SET Status = -1
+        WHERE Id = #{id} AND Status = 0
+    </update>
+
     <select id="listForAnonymous" resultMap="BaseResultMap">
-      SELECT Id, Title, Price, ImgUrl, ImgType FROM content
+      SELECT Id, Title, Price, ImgUrl, ImgType FROM content WHERE Status = 0
     </select>
 
     <select id="listBySellerId" resultMap="BaseResultMap">
-        SELECT Id, Title, Price, ImgUrl, ImgType, SalesAmount FROM content WHERE UserId = #{userId}
+        SELECT Id, Title, Price, ImgUrl, ImgType, SalesAmount FROM content WHERE UserId = #{userId} AND Status = 0
     </select>
 
     <select id="getFullinfoById" resultType="com.netease.homework.content.entity.Content">
-        SELECT * FROM content WHERE Id = #{id}
+        SELECT * FROM content WHERE Id = #{id} AND Status = 0
     </select>
 
     <select id="getBaseinfoById" resultType="com.netease.homework.content.entity.Content">
-        SELECT Id, Title, Price, ImgUrl, ImgType, Summary, DetailText FROM content WHERE Id = #{id}
+        SELECT Id, Title, Price, ImgUrl, ImgType, Summary, DetailText FROM content WHERE Id = #{id} AND Status = 0
     </select>
 
     <select id="countById" resultType="java.lang.Integer">
-        SELECT count(*) FROM content WHERE Id = #{id}
+        SELECT count(*) FROM content WHERE Id = #{id} AND Status = 0
     </select>
     <select id="listByContentIds" resultType="com.netease.homework.content.entity.Content">
         <![CDATA[
