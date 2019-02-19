@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ellipsis">
                             <span class="text-muted">¥</span>
-                            <span class="c-price f14" title="{{item.price}}">{{item.price}}</span>
+                            <span class="c-price f14" title="{{item.price.toFixed(2)}}">{{item.price.toFixed(2)}}</span>
                         </div>
                         {{if type===1 && item.purchased}}
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -70,7 +70,7 @@
                         {{if type===2}}
                             {{if item.salesAmount > 0}}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <span class="pull-right badge bg-red">已售出</span>
+                                <span class="pull-right badge bg-red">已售出&nbsp;{{item.salesAmount}}&nbsp;件</span>
                             </div>
                             {{else}}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">

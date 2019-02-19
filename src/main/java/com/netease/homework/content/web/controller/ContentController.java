@@ -1,14 +1,12 @@
 package com.netease.homework.content.web.controller;
 
 import com.netease.homework.content.entity.Content;
-import com.netease.homework.content.entity.User;
 import com.netease.homework.content.mapper.ContentMapper;
 import com.netease.homework.content.web.util.JsonResponse;
 import com.netease.homework.content.web.util.ResultCode;
 import com.netease.homework.content.web.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @Description
@@ -27,6 +26,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/content")
 public class ContentController {
+
+    private static final Pattern URL_PATTERN = Pattern.compile("^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$");
 
     private final ContentMapper contentMapper;
 
@@ -51,7 +52,7 @@ public class ContentController {
     public JsonResponse getBaseinfo(@PathVariable("id") Long id) {
         JsonResponse r = new JsonResponse();
         Content c = contentMapper.getBaseinfoById(id);
-        return c == null ? r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在")
+        return c == null ? r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在或已下架")
                 : r.setSuccessful().setData(c);
     }
 
@@ -60,7 +61,7 @@ public class ContentController {
         JsonResponse r = new JsonResponse();
         Content c = contentMapper.getFullinfoById(id);
         if (c == null) {
-            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在");
+            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在或已下架");
         }
         if (!Objects.equals(c.getUserId(), SessionUtils.getCurrentPrincipalId())) {
             SessionUtils.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -81,7 +82,7 @@ public class ContentController {
         JsonResponse response = new JsonResponse();
         Content c = contentMapper.getFullinfoById(id);
         if (c == null) {
-            return response.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在");
+            return response.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在或已下架");
         }
         if (!Objects.equals(c.getUserId(), SessionUtils.getCurrentPrincipalId())) {
             SessionUtils.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -99,10 +100,17 @@ public class ContentController {
     @PostMapping("/seller/add")
     public JsonResponse addContent(Content c) {
         JsonResponse r = new JsonResponse();
+        // 前端已经检查过，后台仍需进行参数合法性检查
+        String error = checkContent(c);
+        if (error != null) {
+            return r.setCode(ResultCode.ERROR_BAD_PARAMETER).setError(error);
+        }
         Long uid = SessionUtils.getCurrentPrincipalId();
         Assert.notNull(uid, "add content, userId must not be null");
         c.setUserId(uid);
-        // todo 价格两位小数处理
+        // 价格两位小数处理
+        double priceFix = ((int) (c.getPrice() * 100)) / 100.0;
+        c.setPrice(priceFix);
         int i = contentMapper.save(c);
         if (i != 1) {
             return r.setCode(ResultCode.ERROR_UNKNOWN).setError("添加失败");
@@ -115,15 +123,22 @@ public class ContentController {
     @PutMapping("/seller/update")
     public JsonResponse updateContent(Content c) throws IOException {
         JsonResponse r = new JsonResponse();
+        // 前端已经检查过，后台仍需进行参数合法性检查
+        String error = checkContent(c);
+        if (error != null) {
+            return r.setCode(ResultCode.ERROR_BAD_PARAMETER).setError(error);
+        }
         Content oldContent = contentMapper.getFullinfoById(c.getId());
         if (oldContent == null) {
-            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在");
+            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("商品不存在或已下架");
         }
         if (!Objects.equals(oldContent.getUserId(), SessionUtils.getCurrentPrincipalId())) {
             SessionUtils.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
-        // todo 价格两位小数处理
+        // 价格两位小数处理
+        double priceFix = ((int) (c.getPrice() * 100)) / 100.0;
+        c.setPrice(priceFix);
         int i = contentMapper.update(c);
         if (i != 1) {
             return r.setCode(ResultCode.ERROR_UNKNOWN).setError("更新失败");
@@ -178,6 +193,29 @@ public class ContentController {
         int dir1 = hashcode & 0xf; //0--15
         int dir2 = (hashcode & 0xf0) >> 4; //0-15
         return Paths.get(String.valueOf(dir1), String.valueOf(dir2));
+    }
+
+    private String checkContent(Content c) {
+        if (!checkStringLength(c.getTitle(), 2, 80)) {
+            return "标题长度应在[2,80]字符内";
+        }
+        // 图片url校验，文件上传完后也会返回url
+        String imgUrl = c.getImgUrl();
+        if (imgUrl == null || (!URL_PATTERN.matcher(imgUrl).matches() && !imgUrl.startsWith("/img/"))) {
+            return "图片地址信息不符合要求";
+        }
+        if (!checkStringLength(c.getSummary(), 2, 140)) {
+            return "摘要长度应在[2,140]字符内";
+        }
+        if (!checkStringLength(c.getDetailText(), 2, 1000)) {
+            return "正文长度应在[2,1000]字符内";
+        }
+        return null;
+    }
+
+    private boolean checkStringLength(String s, int low, int high) {
+        int len = s == null ? 0 : s.length();
+        return len >= low && len <= high;
     }
 
     public static void main(String[] args) throws IOException {

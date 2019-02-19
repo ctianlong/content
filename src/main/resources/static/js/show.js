@@ -45,13 +45,13 @@ $(function () {
                         $amount.find('input').prop('title', '已购买数量')
                             .val(o.tradeAmount).prop("disabled", true);
                         $amount.show();
-                        $btn.find('.c-trade-price span').text(o.tradePrice);
+                        $btn.find('.c-trade-price span').text(o.tradePrice.toFixed(2));
                         $btn.find('button').text('已购买').addClass('disabled');
                         $btn.show();
                     } else {
                         $amount.find('input').val(content.tradeAmount);
                         $amount.show();
-                        $("#spinner").spinner('changing', function (e, newVal, oldVal) {
+                        $("#spinner").spinner('delay', 200).spinner('changed', function (e, newVal, oldVal) {
                             content.tradeAmount = newVal;
                         });
                         $btn.find('.c-trade-price').remove();
@@ -97,28 +97,19 @@ $(function () {
         $name.text(c.title);
         $summary.text(c.summary);
         $unit.show();
-        $price.text(c.price);
+        $price.text(c.price.toFixed(2));
         $detail.text(c.detailText);
     }
 
     function addToShopCart() {
-        BootstrapDialog.confirm({
-            title: '提示',
-            message: '确认加入购物车吗？',
-            btnCancelLabel: '取消',
-            btnOKLabel: '确认',
-            type: BootstrapDialog.TYPE_DANGER,
-            size: BootstrapDialog.SIZE_SMALL,
-            closable: true,
-            callback: function (r) {
-                if (r) {
-                    $.post(ctxPath + "/api/shopcart/item/add", {
-                        id: content.id,
-                        amount: content.tradeAmount
-                    }).done(resolve(function () {
-                        showSuccess("已成功添加到购物车");
-                    }));
-                }
+        showConfirm("确认加入购物车吗？", function (r) {
+            if (r) {
+                $.post(ctxPath + "/api/shopcart/item/add", {
+                    id: content.id,
+                    amount: content.tradeAmount
+                }).done(resolve(function () {
+                    showSuccess("已成功添加到购物车");
+                }));
             }
         });
     }

@@ -15,6 +15,24 @@
         VALUES (#{contentId},#{amount},#{userId},#{createTime},#{updateTime})
         ON DUPLICATE KEY UPDATE Amount = Amount + #{amount},UpdateTime = #{updateTime}
     </insert>
+    <update id="updateItemAmount">
+        <![CDATA[
+        UPDATE shopcart
+        SET
+          Amount = #{amount},
+          UpdateTime = #{updateTime}
+        WHERE
+          UserId = #{uid}
+          AND ContentId = #{contentId}
+          AND UpdateTime < #{updateTime}
+        ]]>
+    </update>
+    <delete id="deleteByUidAndCid">
+        DELETE FROM shopcart WHERE UserId = #{uid} AND ContentId = #{cid}
+    </delete>
+    <delete id="deleteByUid">
+        DELETE FROM shopcart WHERE UserId = #{uid}
+    </delete>
     <select id="listItemByUserId" resultType="com.netease.homework.content.entity.Shopcart">
         SELECT * FROM shopcart WHERE UserId = #{userId}
     </select>

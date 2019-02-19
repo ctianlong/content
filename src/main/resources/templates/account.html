@@ -37,13 +37,17 @@
             <th>内容图片</th>
             <th>内容名称</th>
             <th>购买时间</th>
+            <th>购买单价</th>
             <th>购买数量</th>
-            <th>购买价格</th>
+            <th>小计</th>
         </tr>
-        {{set total = 0}}
+        <% var total = 0,tmp; %>
         {{if list && list.length > 0}}
         {{each list item}}
-        <% total = total + item.tradePrice %>
+        <%
+            tmp = item.tradePrice * item.tradeAmount;
+            total += tmp;
+        %>
         <tr>
             <td>
                 <a href="{{$imports.ctxPath + '/show?id=' + item.contentId}}">
@@ -62,28 +66,32 @@
                 </a>
             </td>
             <td>{{item.tradeTime | formatTime}}</td>
+            <td>
+                <span class="text-muted">¥</span>
+                <span>{{item.tradePrice.toFixed(2)}}</span>
+            </td>
             <td>{{item.tradeAmount}}</td>
             <td>
                 <span class="text-muted">¥</span>
-                <span>{{item.tradePrice}}</span>
+                <span>{{tmp.toFixed(2)}}</span>
             </td>
         </tr>
         {{/each}}
         {{else}}
         <tr>
-            <td colspan="5" class="text-center">购买内容为空</td>
+            <td colspan="6" class="text-center">购买内容为空</td>
         </tr>
         {{/if}}
         </tbody>
         {{if list && list.length > 0}}
         <tfoot>
         <tr>
-            <td colspan="4" class="total">
+            <td colspan="5" class="total">
                 总计：
             </td>
             <td>
                 <span class="text-muted">¥</span>
-                <span>{{total}}</span>
+                <span>{{total.toFixed(2)}}</span>
             </td>
         </tr>
         </tfoot>

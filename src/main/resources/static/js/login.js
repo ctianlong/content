@@ -24,7 +24,7 @@ $(function () {
             success: function (data, textStatus, jqXHR) {
                 if (data.successful) {
                     var redirectUrl = data.data.redirectUrl;
-                    $(location).prop("href", redirectUrl);
+                    $(location).prop("href", redirectUrl + window.location.hash);
                 } else {
                     toastr.error(data.error);
                 }

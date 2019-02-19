@@ -1,6 +1,7 @@
 package com.netease.homework.content.mapper;
 
 import com.netease.homework.content.entity.Content;
+import com.netease.homework.content.entity.Shopcart;
 import com.netease.snailreader.common.component.intercept.InterceptableComponent;
 import com.netease.snailreader.common.component.intercept.merge.annotation.MergeMap;
 import com.netease.snailreader.common.component.intercept.prevalid.annotation.NotEmpty;
@@ -39,5 +40,7 @@ public interface ContentMapper extends InterceptableComponent {
 
     @MergeMap
     @MapKey("id")
-    Map<Long, Content> listByContentIds(@NotEmpty @SplitParam @Param("ids") Collection<Long> ids);
+    Map<Long, Content> listByContentIds(@NotEmpty @SplitParam @Param("ids") Collection<Long> ids, @Param("withDeleted") boolean withDeleted);
+
+    int updateAmountBatch(@Param("list") List<Shopcart> list);
 }

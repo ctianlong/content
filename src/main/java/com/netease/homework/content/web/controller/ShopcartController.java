@@ -12,10 +12,7 @@ import com.netease.homework.content.web.util.ResultCode;
 import com.netease.homework.content.web.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -82,7 +79,7 @@ public class ShopcartController {
         for (Shopcart sc : scs) {
             cids.add(sc.getContentId());
         }
-        Map<Long, Content> contents = contentMapper.listByContentIds(cids);
+        Map<Long, Content> contents = contentMapper.listByContentIds(cids, true);
         List<ShopcartVo> scvs = new ArrayList<>();
         for (Shopcart sc : scs) {
             ShopcartVo scv = new ShopcartVo(sc);
@@ -92,9 +89,34 @@ public class ShopcartController {
                 scv.setPrice(c.getPrice());
                 scv.setImgType(c.getImgType());
                 scv.setImgUrl(c.getImgUrl());
+                scv.setStatus(c.getStatus());
             }
             scvs.add(scv);
         }
         return r.setSuccessful().setData(scvs);
+    }
+
+    @DeleteMapping("/item/delete/{cid}")
+    public JsonResponse deleteShopcartItem(@PathVariable("cid") Long cid) {
+        JsonResponse r = new JsonResponse();
+        Long uid = SessionUtils.getCurrentPrincipalId();
+        Assert.notNull(uid, "delete shop cart item, uid must not be null");
+        int i = shopcartMapper.deleteByUidAndCid(uid, cid);
+        if (i != 1) {
+            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("删除失败");
+        }
+        return r.setSuccessful();
+    }
+
+    @PutMapping("/item/update")
+    public JsonResponse updateShopcartItem(Shopcart sc) {
+        JsonResponse r = new JsonResponse();
+        Long uid = SessionUtils.getCurrentPrincipalId();
+        Assert.notNull(uid, "delete shop cart item, uid must not be null");
+        int i = shopcartMapper.updateItemAmount(uid, sc.getContentId(), sc.getUpdateTime(), sc.getAmount());
+        if (i != 1) {
+            return r.setCode(ResultCode.ERROR_UNKNOWN).setError("数量更新失败");
+        }
+        return r.setSuccessful();
     }
 }

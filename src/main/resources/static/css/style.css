@@ -75,7 +75,8 @@
     border-radius: 6px;
 }
 .number-spinner {
-    width: 150px;
+    width: 130px;
+    margin:0 auto;
 }
 .table>tbody>tr>td,.table>tbody>tr>th,.table>tfoot>tr>td,.table>tfoot>tr>th,.table>thead>tr>td,.table>thead>tr>th {
     /*white-space: nowrap;*/

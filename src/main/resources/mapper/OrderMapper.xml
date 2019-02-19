@@ -10,16 +10,21 @@
         <result column="TradePrice" jdbcType="DOUBLE" property="tradePrice" />
         <result column="TradeTime" jdbcType="BIGINT" property="tradeTime" />
     </resultMap>
+    <insert id="insertBatch">
+        INSERT INTO `order` (ContentId, TradeAmount, UserId, TradePrice, TradeTime) VALUES
+        <foreach item="item" collection="orders" separator=",">
+            (#{item.contentId}, #{item.tradeAmount}, #{item.userId}, #{item.tradePrice}, #{item.tradeTime})
+        </foreach>
+    </insert>
 
     <select id="getContentIdsByUserId" resultType="java.lang.Long">
         SELECT ContentId FROM `order` WHERE UserId = #{userId}
     </select>
     <select id="getByUserIdAndContentId" resultType="com.netease.homework.content.entity.Order">
-        SELECT * FROM `order` WHERE Id = #{id} AND UserId = #{userId}
+        SELECT * FROM `order` WHERE ContentId = #{cid} AND UserId = #{userId}
     </select>
     <select id="listByUserId" resultType="com.netease.homework.content.entity.Order">
         SELECT * FROM `order` WHERE UserId = #{userId}
     </select>
-
 
 </mapper>

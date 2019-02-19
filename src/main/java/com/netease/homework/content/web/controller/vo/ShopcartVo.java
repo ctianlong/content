@@ -15,6 +15,7 @@ public class ShopcartVo extends Shopcart {
     private double price;
     private String imgUrl;
     private ImgType imgType;
+    private int status;
 
     public ShopcartVo() {}
 
@@ -25,6 +26,14 @@ public class ShopcartVo extends Shopcart {
         setUserId(sc.getUserId());
         setCreateTime(sc.getCreateTime());
         setUpdateTime(sc.getUpdateTime());
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getTitle() {

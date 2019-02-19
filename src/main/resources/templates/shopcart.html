@@ -22,9 +22,13 @@
 
                     <div class="box-footer">
                         <button type="button" id="back" class="btn btn-default">返回</button>
-                        <button type="button" id="buy" class="btn btn-danger pull-right">
+                        <button type="button" id="buy" class="btn btn-danger pull-right" style="display: none;">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i> 购买
                         </button>
+                    </div>
+
+                    <div class="overlay" style="display: none;" id="spin-mask">
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
                     </div>
 
                 </div>
@@ -47,10 +51,17 @@
             <th>小计</th>
             <th>操作</th>
         </tr>
+        <% var total = 0,tmp,exist; %>
         {{if list && list.length > 0}}
         {{each list item}}
-        <%  %>
-        <tr>
+        <%
+            exist = item.status === 0;
+            if (exist) {
+                tmp = item.price * item.amount;
+                total += tmp;
+            }
+        %>
+        <tr data-id="{{item.id}}">
             <td>
                 <a href="{{$imports.ctxPath + '/show?id=' + item.contentId}}">
 
@@ -66,18 +77,36 @@
                 <a href="{{$imports.ctxPath + '/show?id=' + item.contentId}}">
                     {{item.title}}
                 </a>
+                {{if !exist}}
+                <br/>
+                <span class="badge bg-red">已下架</span>
+                {{/if}}
             </td>
             <td>
                 <span class="text-muted">¥</span>
                 <span>{{item.price.toFixed(2)}}</span>
             </td>
-            <td>{{item.amount}}</td>
             <td>
+                {{if exist}}
+                <div class="input-group number-spinner" data-trigger="spinner">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-spin="down"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                    </div>
+                    <input value="{{item.amount}}" title="请输入购买数量" data-min="1" data-max="999999" type="text" class="form-control text-center" data-rule="quantity">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-spin="up"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                {{/if}}
+            </td>
+            <td>
+                {{if exist}}
                 <span class="text-muted">¥</span>
-                <span>{{(item.price * item.amount).toFixed(2)}}</span>
+                <span>{{tmp.toFixed(2)}}</span>
+                {{/if}}
             </td>
             <td class="emphasize-href">
-                <a class="f12" href="javascript:void(0);">删除</a>
+                <a class="f12 btn-delete" href="javascript:void(0);">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -87,6 +116,20 @@
         </tr>
         {{/if}}
         </tbody>
+        {{if list && list.length > 0}}
+        <tfoot>
+        <tr>
+            <td colspan="4" class="total">
+                总计：
+            </td>
+            <td>
+                <span class="text-muted">¥</span>
+                <span id="priceSum">{{total.toFixed(2)}}</span>
+            </td>
+            <td></td>
+        </tr>
+        </tfoot>
+        {{/if}}
     </table>
 </script>
 <script th:src="@{/js/shopcart.js}"></script>

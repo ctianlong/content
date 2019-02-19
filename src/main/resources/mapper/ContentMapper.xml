@@ -41,6 +41,19 @@
         SET Status = -1
         WHERE Id = #{id} AND Status = 0
     </update>
+    <update id="updateAmountBatch">
+        UPDATE content
+        SET SalesAmount =
+            CASE Id
+            <foreach collection="list" item="item" separator=" ">
+                WHEN #{item.contentId} THEN SalesAmount + #{item.amount}
+            </foreach>
+            END
+        WHERE Id IN
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item.contentId}
+            </foreach>
+    </update>
 
     <select id="listForAnonymous" resultMap="BaseResultMap">
       SELECT Id, Title, Price, ImgUrl, ImgType FROM content WHERE Status = 0
@@ -71,6 +84,9 @@
 				#{id}
 			]]>
         </foreach>
+        <if test="!withDeleted">
+           AND Status = 0
+        </if>
     </select>
 
 </mapper>

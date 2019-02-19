@@ -215,8 +215,8 @@ $(function () {
             return;
         }
         var price = $price.val().trim();
-        if (!/^\d+(\.\d+)?$/g.test(price)) {
-            showWarning("价格信息不符合要求");
+        if (!/^\d+(\.\d{1,2})?$/g.test(price)) {
+            showWarning("价格不符合要求（最多2位小数）");
             return;
         }
         var data = {
