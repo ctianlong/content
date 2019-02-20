@@ -5,9 +5,11 @@ import com.netease.snailreader.common.component.enumeration.StringEnum;
 import com.netease.snailreader.common.ext.mybatis.typehandler.RegisterTypeHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +30,8 @@ public class RegisterTypeHandlerConfig implements ConfigurationCustomizer {
      */
     @Override
     public void customize(Configuration configuration) {
+        // 使用springboot打成jar包后运行必须使用SpringBootVFS才能扫描到.class文件资源
+        VFS.addImplClass(SpringBootVFS.class);
         // 出于简便，下述两个参数暂时不配置到外部配置中
         String handledTypesPackages = "com.netease.homework.content.config.constant";
         List<Class<?>> handledTypesBaseClasses = Arrays.asList(IntEnum.class, StringEnum.class);
