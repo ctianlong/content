@@ -13,6 +13,7 @@ import com.netease.homework.content.web.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,6 +81,7 @@ public class OrderController {
         return r.setSuccessful().setData(list);
     }
 
+    @Transactional
     @PostMapping("/shopcart/settle")
     public JsonResponse settleAccount(@RequestBody List<Shopcart> scs) {
         JsonResponse r = new JsonResponse();
@@ -143,11 +145,9 @@ public class OrderController {
             return r.setCode(ResultCode.ERROR_BAD_PARAMETER).setError(sb.toString());
         }
         // 结算，购买商品插入买家订单表
-        int i = orderMapper.insertBatch(ordersToBuy);
-//        System.out.println(i);
+        orderMapper.insertBatch(ordersToBuy);
         // 更新所购买商品的已售出数量
-        int j = contentMapper.updateAmountBatch(scs);
-//        System.out.println(j);
+        contentMapper.updateAmountBatch(scs);
         // 删除用户购物车内记录
         shopcartMapper.deleteByUid(uid);
         return r.setSuccessful();
