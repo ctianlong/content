@@ -133,6 +133,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     /**
      * 用于在前端页面 from 中插入_csrf隐藏域
      * 注意此处 beanName 必须为 requestDataValueProcessor
+     * 原因参见类RequestContext中查找该bean的代码，其利用上述beanName来查找
      * @return
      */
     @Bean("requestDataValueProcessor")

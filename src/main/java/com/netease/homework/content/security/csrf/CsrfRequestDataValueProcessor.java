@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 /**
  * @Description 用于在页面表单上form中添加隐藏_csrf参数，仿照spring security，适用于Thymeleaf
  * https://www.cnblogs.com/zh94/p/8214149.html
+ * 该类提供csrf数据，实际向form中添加隐藏字段是在类SpringActionAttrProcessor的doAdditionalProcess方法中
  * @Auther ctl
  * @Date 2018/8/3
  */
